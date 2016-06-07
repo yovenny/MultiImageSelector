@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -17,10 +18,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import me.nereo.multi_image_selector.MultiImageSelector;
+import me.nereo.multi_media_selector.MediaOptions;
+import me.nereo.multi_media_selector.MultiMediaSelectorActivity;
+import me.nereo.multi_media_selector.MultiMediaSelectorFragment;
+import me.nereo.multi_media_selector.bean.MediaItem;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -30,10 +35,10 @@ public class MainActivity extends AppCompatActivity {
     protected static final int REQUEST_STORAGE_WRITE_ACCESS_PERMISSION = 102;
 
     private TextView mResultText;
-    private RadioGroup mChoiceMode, mShowCamera;
+    private RadioGroup mChoiceMode, mShowCamera,mMediaType;
     private EditText mRequestNum;
 
-    private ArrayList<String> mSelectPath;
+    private ArrayList<MediaItem> mSelectPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         mResultText = (TextView) findViewById(R.id.result);
         mChoiceMode = (RadioGroup) findViewById(R.id.choice_mode);
         mShowCamera = (RadioGroup) findViewById(R.id.show_camera);
+        mMediaType= (RadioGroup) findViewById(R.id.type_rg);
         mRequestNum = (EditText) findViewById(R.id.request_num);
 
         mChoiceMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -56,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
 
         View button = findViewById(R.id.button);
         if (button != null) {
@@ -87,18 +94,52 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-            MultiImageSelector selector = MultiImageSelector.create(MainActivity.this);
-            selector.showCamera(showCamera);
-            selector.count(maxNum);
+
+            MediaOptions.Builder builder = new MediaOptions.Builder();
+            MediaOptions options = null;
+
+            builder.setShowCamera(showCamera).setMaxcount(maxNum);
+
             if (mChoiceMode.getCheckedRadioButtonId() == R.id.single) {
-                selector.single();
+                builder.setMode(MultiMediaSelectorFragment.MODE_SINGLE);
             } else {
-                selector.multi();
+                builder.setMode(MultiMediaSelectorFragment.MODE_MULTI);
             }
-            selector.origin(mSelectPath);
-            selector.start(MainActivity.this, REQUEST_IMAGE);
+            switch (mMediaType.getCheckedRadioButtonId()){
+                case R.id.image_rb:
+                    builder.setMediaType(MultiMediaSelectorFragment.LIST_IMAGE);
+                    break;
+                case R.id.video_rb:
+                    builder.setMediaType(MultiMediaSelectorFragment.LIST_VIDEO);
+                    break;
+                case R.id.image_video_rb:
+                    builder.setMediaType(MultiMediaSelectorFragment.LIST_IMAGE_VIDEO);
+                    break;
+            }
+            builder.setMediaListSelected(mSelectPath);
+            options =builder.build();
+            if (options != null) {
+                if(hasPermission()) {
+                    MultiMediaSelectorActivity.open(this, REQUEST_IMAGE, options);
+                }else{
+                    Toast.makeText(this, me.nereo.multi_media_selector.R.string.error_no_permission, Toast.LENGTH_SHORT).show();
+                }
+
+            }
         }
     }
+
+
+    private boolean hasPermission(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
+            // Permission was added in API Level 16
+            return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED;
+        }
+        return true;
+    }
+
+
 
     private void requestPermission(final String permission, String rationale, final int requestCode){
         if(ActivityCompat.shouldShowRequestPermissionRationale(this, permission)){
@@ -134,10 +175,10 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_IMAGE){
             if(resultCode == RESULT_OK){
-                mSelectPath = data.getStringArrayListExtra(MultiImageSelector.EXTRA_RESULT);
+                mSelectPath = data.getParcelableArrayListExtra(MultiMediaSelectorFragment.EXTRA_RESULT);
                 StringBuilder sb = new StringBuilder();
-                for(String p: mSelectPath){
-                    sb.append(p);
+                for(MediaItem p: mSelectPath){
+                    sb.append(p.getPath());
                     sb.append("\n");
                 }
                 mResultText.setText(sb.toString());

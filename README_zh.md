@@ -140,6 +140,14 @@ class CustomerActivity extends Activity implements MultiImageSelectorFragment.Ca
 
 ###更新日志
 
+
+* 2016-6-7 by yovenny
+   1. 点击Folder第一项更新所有数据，
+   2. 添加录像并返回。
+   3. 添加图片跟视频预览
+   4. 添加视频压缩。
+   5. 添加截图支持.
+
 * 2016-5-18
     1. 新增. `JitPack` 支持
     2. 新增. 简单的调用方式. 详细参见 `第2步`

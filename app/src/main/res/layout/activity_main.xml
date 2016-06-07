@@ -81,6 +81,39 @@
 
     </RadioGroup>
 
+    <TextView
+        android:text="@string/media_type_list"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RadioGroup
+        android:id="@+id/type_rg"
+        android:checkedButton="@+id/image_rb"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/image_rb"
+            android:text="@string/image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RadioButton
+            android:id="@+id/video_rb"
+            android:text="@string/video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RadioButton
+            android:id="@+id/image_video_rb"
+            android:text="@string/image_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RadioGroup>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -7,9 +7,13 @@
     <string name="mode_multi">Multi-Choice</string>
     <string name="max_select_amount">Max Selected Amount</string>
     <string name="hint_default_amount">default amount is 9</string>
-    <string name="enable_camera">Enable Camera</string>
+    <string name="enable_camera">Enable Camera Or Record</string>
+    <string name="media_type_list">media list mode</string>
     <string name="enable">Enable</string>
     <string name="disable">Disable</string>
     <string name="go_select">Select</string>
+    <string name="image">pictures</string>
+    <string name="video">video</string>
+    <string name="image_video">pictures-video</string>
 
 </resources>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">多图选择</string>
+    <string name="app_name">多图片视频选择</string>
 
     <string name="action_settings">设置</string>
 
@@ -8,9 +8,12 @@
     <string name="mode_multi">多选</string>
     <string name="max_select_amount">最大选择数量</string>
     <string name="hint_default_amount">默认数量为9</string>
-    <string name="enable_camera">是否启用照相机</string>
+    <string name="enable_camera">是否启用照相机录像机</string>
+    <string name="media_type_list">图片跟视频混排</string>
     <string name="enable">是</string>
     <string name="disable">否</string>
-    <string name="go_select">图片选择</string>
-
+    <string name="go_select">选择</string>
+    <string name="image">图片</string>
+    <string name="video">视频</string>
+    <string name="image_video">图片和视频</string>
 </resources>

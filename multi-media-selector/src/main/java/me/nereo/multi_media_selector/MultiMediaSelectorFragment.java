@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -138,7 +137,7 @@ public class MultiMediaSelectorFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,   ViewGroup container,   Bundle savedInstanceState) {
         return inflater.inflate(me.nereo.multi_media_selector.R.layout.fragment_multi_image, container, false);
     }
 
@@ -151,7 +150,7 @@ public class MultiMediaSelectorFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view,   Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (savedInstanceState != null) {
             mMediaOptions = savedInstanceState
@@ -424,7 +423,7 @@ public class MultiMediaSelectorFragment extends Fragment {
     }
 
     @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+    public void onViewStateRestored(  Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState != null) {
             mTmpFile = (File) savedInstanceState.getSerializable(KEY_TEMP_FILE);
@@ -437,7 +436,7 @@ public class MultiMediaSelectorFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(  Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         // 首次加载所有图片
         //new LoadImageTask().execute();
@@ -575,9 +574,7 @@ public class MultiMediaSelectorFragment extends Fragment {
         super.onConfigurationChanged(newConfig);
     }
 
-    /**
-     * 选择相机
-     */
+
     private void showCameraAction() {
         // 跳转到系统照相机
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -631,11 +628,6 @@ public class MultiMediaSelectorFragment extends Fragment {
     }
 
 
-    /**
-     * 选择图片操作
-     *
-     * @param
-     */
     private void selectImageFromGrid(MediaItem item, int mode) {
         if (item != null) {
             // 多选模式

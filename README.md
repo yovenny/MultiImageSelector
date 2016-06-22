@@ -20,7 +20,7 @@
  compile project(':multi-media-selector')(recommend)
  
  dependencies {
-    compile 'com.yovenny.MultiMediaSelector:1.0.0'
+    compile 'com.yovenny:multi-media-selector:1.0.0'
  }
  
 ```

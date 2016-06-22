@@ -58,11 +58,7 @@ public class MediaGridAdapter extends BaseAdapter {
         mGridWidth = width / column;
     }
 
-    /**
-     * 显示选择指示器
-     *
-     * @param b
-     */
+
     public void showSelectIndicator(boolean b) {
         showSelectIndicator = b;
     }
@@ -78,11 +74,6 @@ public class MediaGridAdapter extends BaseAdapter {
         return showAction;
     }
 
-    /**
-     * 选择某个图片，改变选择状态
-     *
-     * @param image
-     */
     public void select(MediaItem image) {
         if (mSelectedImages.contains(image)) {
             mSelectedImages.remove(image);
@@ -92,11 +83,7 @@ public class MediaGridAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    /**
-     * 通过图片路径设置默认选择
-     *
-     * @param resultList
-     */
+
     public void setDefaultSelected(ArrayList<MediaItem> resultList) {
         mSelectedImages.clear();
         for (MediaItem item : resultList) {
@@ -121,11 +108,7 @@ public class MediaGridAdapter extends BaseAdapter {
         return null;
     }
 
-    /**
-     * 设置数据集
-     *
-     * @param images
-     */
+
     public void setData(List<MediaItem> images) {
         mSelectedImages.clear();
         if (images != null && images.size() > 0) {

@@ -18,7 +18,7 @@ base in https://github.com/lovetuzitong/MultiImageSelector.git & https://github.
  compile project(':multi-media-selector')(recommend)
  
  dependencies {
-    compile 'com.yovenny.MultiMediaSelector:1.0.0'
+   compile 'com.yovenny:multi-media-selector:1.0.0'
  }
  
 ```

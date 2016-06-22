@@ -12,7 +12,6 @@ import me.nereo.multi_media_selector.utils.MediaUtils;
 
 /**
  * @author TUNGDX
- *         <p/>
  *         TODO chenbc 1.(增加了path,减少cursor的查询)暂不确定path是否多余,2.更改path为equals的唯一指标去除uriOrigin,因为(其可能为file://,content://   scheme)
  *
  */
@@ -25,10 +24,7 @@ public class MediaItem implements Parcelable {
     private Uri uriCropped;
 
 
-    /**
-     * @param mediaType Whether {@link #PHOTO} or {@link #VIDEO}
-     * @param uriOrigin {@link Uri} of media item.
-     */
+
     public MediaItem(int mediaType, Uri uriOrigin, String path) {
         this.type = mediaType;
         this.uriOrigin = uriOrigin;
@@ -44,18 +40,12 @@ public class MediaItem implements Parcelable {
         this.uriCropped = uriCropped;
     }
 
-    /**
-     * @return type of media item. Whether {@link #PHOTO} or {@link #VIDEO}
-     */
+
     public int getType() {
         return type;
     }
 
-    /**
-     * Set type of media.
-     *
-     * @param type is {@link #PHOTO} or {@link #VIDEO}
-     */
+
     public void setType(int type) {
         this.type = type;
     }
@@ -168,18 +158,11 @@ public class MediaItem implements Parcelable {
                 + ", uriOrigin=" + uriOrigin + "]";
     }
 
-    /**
-     * @param context
-     * @return Path of origin file.
-     */
+
     public String getPathOrigin(Context context) {
         return getPathFromUri(context, uriOrigin);
     }
 
-    /**
-     * @param context
-     * @return Path of cropped file.
-     */
 
     private String getPathFromUri(Context context, Uri uri) {
         if (uri == null)

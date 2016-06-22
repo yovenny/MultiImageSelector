@@ -67,9 +67,6 @@ public class VideoFragment extends Fragment implements View.OnClickListener {
 
     /**
      * 获取视频缩略图（这里获取第一帧）
-     *
-     * @param filePath
-     * @return
      */
     public Bitmap getVideoThumbnail(String filePath) {
         Bitmap bitmap = null;

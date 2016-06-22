@@ -46,12 +46,7 @@ public class MediaDetailsActivity extends AppCompatActivity implements
     private ArrayList<String> mMediaSelectedList = new ArrayList<>();
     private int mMaxPick = 9;
 
-    /**
-     * 查看图片大图list，（position ==0 ，videoURL maybe）
-     *
-     * @param index
-     * @param urls
-     */
+
     public static void showMediaUrls(Fragment fragment, int index, ArrayList<String> urls, ArrayList<String> selectUrls, int requestCode) {
         Intent intent = new Intent(fragment.getActivity(), MediaDetailsActivity.class);
         intent.putExtra("index", index);

@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     protected static final int REQUEST_STORAGE_WRITE_ACCESS_PERMISSION = 102;
 
     private TextView mResultText;
-    private RadioGroup mChoiceMode, mShowCamera,mMediaType;
+    private RadioGroup mChoiceMode, mShowCamera,mMediaType,mCrop;
     private EditText mRequestNum;
 
     private ArrayList<MediaItem> mSelectPath;
@@ -49,16 +49,21 @@ public class MainActivity extends AppCompatActivity {
         mChoiceMode = (RadioGroup) findViewById(R.id.choice_mode);
         mShowCamera = (RadioGroup) findViewById(R.id.show_camera);
         mMediaType= (RadioGroup) findViewById(R.id.type_rg);
+        mCrop= (RadioGroup) findViewById(R.id.crop_rg);
         mRequestNum = (EditText) findViewById(R.id.request_num);
+        mCrop.setVisibility(View.GONE);
 
         mChoiceMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                 if(checkedId == R.id.multi){
                     mRequestNum.setEnabled(true);
+                    mCrop.setVisibility(View.GONE);
+                    mCrop.clearCheck();
                 }else{
                     mRequestNum.setEnabled(false);
                     mRequestNum.setText("");
+                    mCrop.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -99,6 +104,10 @@ public class MainActivity extends AppCompatActivity {
             MediaOptions options = null;
 
             builder.setShowCamera(showCamera).setMaxcount(maxNum);
+
+            if(mCrop.getCheckedRadioButtonId() == R.id.crop_rb){
+                builder.setCropped(true);
+            }
 
             if (mChoiceMode.getCheckedRadioButtonId() == R.id.single) {
                 builder.setMode(MultiMediaSelectorFragment.MODE_SINGLE);

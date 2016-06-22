@@ -143,7 +143,7 @@ public class FolderAdapter extends BaseAdapter {
 //        int result = 0;
 //        if (mFolders != null && mFolders.size() > 0) {
 //            for (Folder f : mFolders) {
-//                result += f.images.size();
+//                result += f.mediaItems.size();
 //            }
 //        }
 //        return result;
@@ -153,7 +153,7 @@ public class FolderAdapter extends BaseAdapter {
 //        int result = 0;
 //        if (mFolders != null && mFolders.size() > 0) {
 //            for (Folder f : mFolders) {
-//                result += f.images.size();
+//                result += f.mediaItems.size();
 //            }
 //        }
 //        return result;
@@ -192,8 +192,8 @@ public class FolderAdapter extends BaseAdapter {
             }
             name.setText(data.name);
             path.setText((data.path.equals(MultiMediaSelectorFragment.IMAGE_PATH)||data.path.equals(MultiMediaSelectorFragment.VIDEO_PATH))?"/sdcard":data.path);
-            if (data.images != null) {
-                size.setText(String.format("%d%s", data.images.size(), mContext.getResources().getString(R.string.photo_unit)));
+            if (data.mediaItems != null) {
+                size.setText(String.format("%d%s", data.mediaItems.size(), mContext.getResources().getString(R.string.photo_unit)));
             } else {
                 size.setText("*" + mContext.getResources().getString(R.string.photo_unit));
             }

@@ -27,5 +27,9 @@
         <string name="picker_video_duration_max">This video\'s duration larger than %d second.</string>
         <string name="picker_video_duration_warning">Video\'s duration limit is  %d seconds.</string>
 
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="waiting">Waiting&#8230;</string>
+
 
 </resources>

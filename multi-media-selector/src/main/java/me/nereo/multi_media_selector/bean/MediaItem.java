@@ -22,6 +22,7 @@ public class MediaItem implements Parcelable {
     private int type;
     private Uri uriOrigin;
     private String path;
+    private Uri uriCropped;
 
 
     /**
@@ -32,6 +33,15 @@ public class MediaItem implements Parcelable {
         this.type = mediaType;
         this.uriOrigin = uriOrigin;
         this.path = path;
+    }
+
+
+    public Uri getUriCropped() {
+        return uriCropped;
+    }
+
+    public void setUriCropped(Uri uriCropped) {
+        this.uriCropped = uriCropped;
     }
 
     /**

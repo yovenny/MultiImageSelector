@@ -24,10 +24,9 @@ public class MediaOptions implements Parcelable {
     private int mMode = MultiMediaSelectorFragment.MODE_MULTI;
     private int mMediaType;
     private boolean isCarmeActionFirst;
-
-    public boolean getIsCarmeActionFirst() {
-        return isCarmeActionFirst;
-    }
+    private int aspectX;
+    private int aspectY;
+    private boolean fixAspectRatio;
 
     public boolean isShowWarningVideoDuration() {
         return showWarningVideoDuration;
@@ -77,6 +76,22 @@ public class MediaOptions implements Parcelable {
         return photoCaptureFile;
     }
 
+    public boolean isCarmeActionFirst() {
+        return isCarmeActionFirst;
+    }
+
+    public int getAspectX() {
+        return aspectX;
+    }
+
+    public int getAspectY() {
+        return aspectY;
+    }
+
+    public boolean isFixAspectRatio() {
+        return fixAspectRatio;
+    }
+
     private MediaOptions(Builder builder) {
         this.isCropped = builder.isCropped;
         this.maxVideoDuration = builder.maxVideoDuration;
@@ -90,6 +105,9 @@ public class MediaOptions implements Parcelable {
         this.mMode=builder.mMode;
         this.mMediaType=builder.mMediaType;
         this.isCarmeActionFirst=builder.isCarmeActionFirst;
+        this.aspectX=builder.aspectX;
+        this.aspectY=builder.aspectY;
+        this.fixAspectRatio=builder.fixAspectRatio;
     }
 
 
@@ -113,7 +131,9 @@ public class MediaOptions implements Parcelable {
         private int mMode = MultiMediaSelectorFragment.MODE_MULTI;
         private int mMediaType;
         private boolean isCarmeActionFirst=true;
-
+        private int aspectX = 1;
+        private int aspectY = 1;
+        private boolean fixAspectRatio = true;
 
         public Builder() {
 
@@ -187,6 +207,46 @@ public class MediaOptions implements Parcelable {
             return this;
         }
 
+        public void setCropped(boolean cropped) {
+            isCropped = cropped;
+        }
+
+        public void setShowWarningVideoDuration(boolean showWarningVideoDuration) {
+            this.showWarningVideoDuration = showWarningVideoDuration;
+        }
+
+        public void setmShowCamera(boolean mShowCamera) {
+            this.mShowCamera = mShowCamera;
+        }
+
+        public void setmMaxCount(int mMaxCount) {
+            this.mMaxCount = mMaxCount;
+        }
+
+        public void setmMode(int mMode) {
+            this.mMode = mMode;
+        }
+
+        public void setmMediaType(int mMediaType) {
+            this.mMediaType = mMediaType;
+        }
+
+        public void setCarmeActionFirst(boolean carmeActionFirst) {
+            isCarmeActionFirst = carmeActionFirst;
+        }
+
+        public void setAspectX(int aspectX) {
+            this.aspectX = aspectX;
+        }
+
+        public void setAspectY(int aspectY) {
+            this.aspectY = aspectY;
+        }
+
+        public void setFixAspectRatio(boolean fixAspectRatio) {
+            this.fixAspectRatio = fixAspectRatio;
+        }
+
         public MediaOptions build() {
             return new MediaOptions(this);
         }
@@ -211,6 +271,9 @@ public class MediaOptions implements Parcelable {
         dest.writeInt(mMode);
         dest.writeInt(mMediaType);
         dest.writeInt(isCarmeActionFirst?1:0);
+        dest.writeInt(aspectX);
+        dest.writeInt(aspectY);
+        dest.writeInt(fixAspectRatio?1:0);
     }
 
     public MediaOptions(Parcel in) {
@@ -226,6 +289,9 @@ public class MediaOptions implements Parcelable {
         this.mMode=in.readInt();
         this.mMediaType=in.readInt();
         this.isCarmeActionFirst=in.readInt()==0?false:true;
+        this.aspectX=in.readInt();
+        this.aspectY=in.readInt();
+        this.fixAspectRatio=in.readInt()==0?false:true;
     }
 
 

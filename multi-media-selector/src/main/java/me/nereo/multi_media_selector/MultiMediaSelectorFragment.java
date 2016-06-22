@@ -53,7 +53,8 @@ public class MultiMediaSelectorFragment extends Fragment {
     public static final String TAG = "me.nereo.multiimageselector.frag.MultiImageSelectorFragment";
 
     private static final String KEY_TEMP_FILE = "key_temp_file";
-    private static final String KEY_MEDIA_SELECTED_LIST = "media_selected_list";
+    public static final String KEY_MEDIA_SELECTED_LIST = "media_selected_list";
+    public static final String TYPE_SPLIT = "`";
 
     public static final int LIST_IMAGE = 0;
     public static final int LIST_VIDEO = 1;
@@ -91,6 +92,7 @@ public class MultiMediaSelectorFragment extends Fragment {
     // 请求加载系统照相机
     private static final int REQUEST_CAMERA = 100;
     public static final int VIDEO_RECORDER_REQUEST_CODE = 104;
+    public static final int PREVIEW_REQUEST_CODE = 105;
 
 
     // 结果数据
@@ -114,7 +116,6 @@ public class MultiMediaSelectorFragment extends Fragment {
     private Button mPreviewBtn;
     // 底部View
     private View mPopupAnchorView;
-
 
 
     private boolean hasFolderGened = false;
@@ -185,7 +186,7 @@ public class MultiMediaSelectorFragment extends Fragment {
                     return;
                 }
                 //对选择视频大小50M的限制.
-                if(mediaItem.getType()== MediaItem.VIDEO){
+                if (mediaItem.getType() == MediaItem.VIDEO) {
 //                    long videoSize=FileUtil.getFileSize(new File(mediaItem.getPath()));
 //                    if(videoSize/ (1024 * 1024)>50){
 //                        ToastUtil.Po(getContext(),getContext().getString(R.string.video_size_too_max));
@@ -226,7 +227,7 @@ public class MultiMediaSelectorFragment extends Fragment {
         mPopupAnchorView = view.findViewById(me.nereo.multi_media_selector.R.id.footer);
 
         mCategoryText = (TextView) view.findViewById(me.nereo.multi_media_selector.R.id.category_btn);
-        mCategoryText.setText(mMediaOptions.getmMediaType() == LIST_IMAGE ? R.string.folder_all : mMediaOptions.getmMediaType()  == LIST_VIDEO ? R.string.folder_all_video : mMediaOptions.getIsCarmeActionFirst() ? R.string.folder_all : R.string.folder_all_video);
+        mCategoryText.setText(mMediaOptions.getmMediaType() == LIST_IMAGE ? R.string.folder_all : mMediaOptions.getmMediaType() == LIST_VIDEO ? R.string.folder_all_video : mMediaOptions.isCarmeActionFirst() ? R.string.folder_all : R.string.folder_all_video);
         mCategoryText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -248,14 +249,23 @@ public class MultiMediaSelectorFragment extends Fragment {
 
         mPreviewBtn = (Button) view.findViewById(me.nereo.multi_media_selector.R.id.preview);
         // 初始化，按钮状态初始化
-        if (mMediaSelectedList == null || mMediaSelectedList.size() <= 0) {
-            mPreviewBtn.setText(me.nereo.multi_media_selector.R.string.preview);
+        if (mMediaSelectedList.size() != 0) {
+            mPreviewBtn.setEnabled(true);
+            mPreviewBtn.setText(getResources().getString(me.nereo.multi_media_selector.R.string.preview) + "(" + mMediaSelectedList.size() + ")");
+        } else {
             mPreviewBtn.setEnabled(false);
+            mPreviewBtn.setText(me.nereo.multi_media_selector.R.string.preview);
         }
         mPreviewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO 预览
+                ArrayList<String> mediaList = new ArrayList<>();
+                ArrayList<String> selectList = new ArrayList<>();
+                for (MediaItem item : mMediaSelectedList) {
+                    mediaList.add(item.getPath() + TYPE_SPLIT + item.getType());
+                    selectList.add(item.getPath());
+                }
+                MediaDetailsActivity.showMediaUrls(MultiMediaSelectorFragment.this, 0, mediaList, selectList, PREVIEW_REQUEST_CODE);
             }
         });
 
@@ -343,13 +353,13 @@ public class MultiMediaSelectorFragment extends Fragment {
                             } else if (mMediaOptions.getmMediaType() == LIST_VIDEO) {
                                 getActivity().getSupportLoaderManager().restartLoader(LOADER_ALL_VIDEO, null, mVideoLoaderCallback);
                             } else {
-                                if (mMediaOptions.getIsCarmeActionFirst()) {
+                                if (mMediaOptions.isCarmeActionFirst()) {
                                     getActivity().getSupportLoaderManager().restartLoader(LOADER_ALL, null, mLoaderCallback);
                                 } else {
                                     getActivity().getSupportLoaderManager().restartLoader(LOADER_ALL_VIDEO, null, mVideoLoaderCallback);
                                 }
                             }
-                            mCategoryText.setText(mMediaOptions.getmMediaType() == LIST_IMAGE ? R.string.folder_all : mMediaOptions.getmMediaType() == LIST_VIDEO ? R.string.folder_all_video : mMediaOptions.getIsCarmeActionFirst() ? R.string.folder_all : R.string.folder_all_video);
+                            mCategoryText.setText(mMediaOptions.getmMediaType() == LIST_IMAGE ? R.string.folder_all : mMediaOptions.getmMediaType() == LIST_VIDEO ? R.string.folder_all_video : mMediaOptions.isCarmeActionFirst() ? R.string.folder_all : R.string.folder_all_video);
                             if (mMediaOptions.ismShowCamera()) {
                                 mImageAdapter.setShowAction(true);
                             } else {
@@ -357,12 +367,12 @@ public class MultiMediaSelectorFragment extends Fragment {
                             }
                         } else if (index == 1) {
                             if (mMediaOptions.getmMediaType() == LIST_IMAGE_VIDEO) {
-                                if (mMediaOptions.getIsCarmeActionFirst()) {
+                                if (mMediaOptions.isCarmeActionFirst()) {
                                     getActivity().getSupportLoaderManager().restartLoader(LOADER_ALL_VIDEO, null, mVideoLoaderCallback);
                                 } else {
                                     getActivity().getSupportLoaderManager().restartLoader(LOADER_ALL, null, mLoaderCallback);
                                 }
-                                mCategoryText.setText(mMediaOptions.getmMediaType() == LIST_IMAGE ? R.string.folder_all : mMediaOptions.getmMediaType() == LIST_VIDEO ? R.string.folder_all_video : mMediaOptions.getIsCarmeActionFirst() ? R.string.folder_all_video : R.string.folder_all);
+                                mCategoryText.setText(mMediaOptions.getmMediaType() == LIST_IMAGE ? R.string.folder_all : mMediaOptions.getmMediaType() == LIST_VIDEO ? R.string.folder_all_video : mMediaOptions.isCarmeActionFirst() ? R.string.folder_all_video : R.string.folder_all);
                                 if (mMediaOptions.ismShowCamera()) {
                                     mImageAdapter.setShowAction(true);
                                 } else {
@@ -386,7 +396,7 @@ public class MultiMediaSelectorFragment extends Fragment {
             private void changeFolderData(Folder folder, int index) {
 
                 if (null != folder) {
-                    mImageAdapter.setData(folder.images);
+                    mImageAdapter.setData(folder.mediaItems);
                     mCategoryText.setText(folder.name);
                     // 设定默认选择
                     if (mMediaSelectedList != null && mMediaSelectedList.size() > 0) {
@@ -462,9 +472,28 @@ public class MultiMediaSelectorFragment extends Fragment {
             }
         }
 
-        if(requestCode ==VIDEO_RECORDER_REQUEST_CODE ){
+        if (requestCode == VIDEO_RECORDER_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 returnVideo(data.getData());
+            }
+        }
+
+        if (requestCode == PREVIEW_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                ArrayList<String> mSelectList = data.getStringArrayListExtra(EXTRA_RESULT);
+                mMediaSelectedList.clear();
+                for (String s : mSelectList) {
+                    mMediaSelectedList.add(new MediaItem(MediaItem.PHOTO, Uri.fromFile(new File(s)), s));
+                }
+                mImageAdapter.setDefaultSelected(mMediaSelectedList);
+                ((MultiMediaSelectorActivity) getActivity()).updateSubmitBtn(mMediaSelectedList);
+                if (mMediaSelectedList.size() != 0) {
+                    mPreviewBtn.setEnabled(true);
+                    mPreviewBtn.setText(getResources().getString(me.nereo.multi_media_selector.R.string.preview) + "(" + mMediaSelectedList.size() + ")");
+                } else {
+                    mPreviewBtn.setEnabled(false);
+                    mPreviewBtn.setText(me.nereo.multi_media_selector.R.string.preview);
+                }
             }
         }
 
@@ -481,18 +510,18 @@ public class MultiMediaSelectorFragment extends Fragment {
             case -1:
                 // in seconds
                 int duration = mMediaOptions.getMinVideoDuration() / 1000;
-                showVideoInvalid((getActivity().getString(R.string.picker_video_duration_min,duration)));
+                showVideoInvalid((getActivity().getString(R.string.picker_video_duration_min, duration)));
                 break;
 
             // larger than max
             case 0:
                 // in seconds.
                 duration = mMediaOptions.getMaxVideoDuration() / 1000;
-                showVideoInvalid(getActivity().getString(R.string.picker_video_duration_max,duration));
+                showVideoInvalid(getActivity().getString(R.string.picker_video_duration_max, duration));
                 break;
             // ok
             case 1:
-                MediaItem item = new MediaItem(MediaItem.VIDEO, videoUri,videoUri.getPath());
+                MediaItem item = new MediaItem(MediaItem.VIDEO, videoUri, videoUri.getPath());
                 mCallback.onRecordShot(item);
                 break;
 
@@ -582,7 +611,7 @@ public class MultiMediaSelectorFragment extends Fragment {
                 takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, max);
                 if (mMediaOptions.isShowWarningVideoDuration()) {
                     MediaPickerErrorDialog dialog = MediaPickerErrorDialog
-                            .newInstance(getString(R.string.picker_video_duration_warning,max));
+                            .newInstance(getString(R.string.picker_video_duration_warning, max));
                     dialog.setOnOKClickListener(new DialogInterface.OnClickListener() {
 
                         @Override
@@ -592,7 +621,7 @@ public class MultiMediaSelectorFragment extends Fragment {
                         }
                     });
                     dialog.show(getActivity().getSupportFragmentManager(), null);
-                }else {
+                } else {
                     startActivityForResult(takeVideoIntent, VIDEO_RECORDER_REQUEST_CODE);
                 }
             } else {
@@ -600,7 +629,6 @@ public class MultiMediaSelectorFragment extends Fragment {
             }
         }
     }
-
 
 
     /**
@@ -639,12 +667,17 @@ public class MultiMediaSelectorFragment extends Fragment {
                     }
                 }
                 mImageAdapter.select(image);*/
-                if (item.isPhoto()) {
-//                    PageSwitch.go2ViewBigImagePage(getContext(), Uri.fromFile(new File(item.getPath())), "");
-                } else {
-//                    PageSwitch.go2VideoPreviewPage(getContext(), item.getPath(), 99);
+                ArrayList<MediaItem> folderDataList = (ArrayList<MediaItem>) mFolderAdapter.getItem(mFolderAdapter.getSelectIndex()).mediaItems;
+                ArrayList<String> mediaList = new ArrayList<>();
+                for (MediaItem mediaItem : folderDataList) {
+                    mediaList.add(mediaItem.getPath() + TYPE_SPLIT + mediaItem.getType());
                 }
 
+                ArrayList<String> selectList = new ArrayList<>();
+                for (MediaItem mediaItem : mMediaSelectedList) {
+                    selectList.add(mediaItem.getPath());
+                }
+                MediaDetailsActivity.showMediaUrls(MultiMediaSelectorFragment.this, folderDataList.indexOf(item), mediaList, selectList, PREVIEW_REQUEST_CODE);
             } else if (mode == MODE_SINGLE) {
                 // 单选模式
                 if (mCallback != null) {
@@ -663,10 +696,10 @@ public class MultiMediaSelectorFragment extends Fragment {
 
     private void removeExist(int mime) {
         for (Folder folder : mResultFolder) {
-            for (int i = 0; i < folder.images.size(); i++) {
-                MediaItem item = folder.images.get(i);
+            for (int i = 0; i < folder.mediaItems.size(); i++) {
+                MediaItem item = folder.mediaItems.get(i);
                 if (item.getType() == mime) {
-                    folder.images.remove(item);
+                    folder.mediaItems.remove(item);
                     i--;
                 }
             }
@@ -745,10 +778,10 @@ public class MultiMediaSelectorFragment extends Fragment {
                                     folder.cover = media;
                                     List<MediaItem> imageList = new ArrayList<>();
                                     imageList.add(media);
-                                    folder.images = imageList;
+                                    folder.mediaItems = imageList;
                                     mResultFolder.add(folder);
                                 } else {
-                                    f.images.add(media);
+                                    f.mediaItems.add(media);
                                 }
                             }
                         }
@@ -764,11 +797,11 @@ public class MultiMediaSelectorFragment extends Fragment {
                         folder.cover = images.get(0);
                         List<MediaItem> videoList = new ArrayList<>();
                         videoList.addAll(images);
-                        folder.images = videoList;
+                        folder.mediaItems = videoList;
                         mResultFolder.add(0, folder);
                     } else {
-                        f.images.clear();
-                        f.images.addAll(images);
+                        f.mediaItems.clear();
+                        f.mediaItems.addAll(images);
                     }
                 }
             }
@@ -822,7 +855,7 @@ public class MultiMediaSelectorFragment extends Fragment {
                 mImageAdapter.setData(videos);
                 finishListData();
             } else {
-                mImageAdapter.setData(mResultFolder.get(0).images);
+                mImageAdapter.setData(mResultFolder.get(0).mediaItems);
                 finishListData();
             }
             mLoaderStatus |= LOADER_ALL_VIDEO;
@@ -853,10 +886,10 @@ public class MultiMediaSelectorFragment extends Fragment {
                                     folder.cover = media;
                                     List<MediaItem> videoList = new ArrayList<>();
                                     videoList.add(media);
-                                    folder.images = videoList;
+                                    folder.mediaItems = videoList;
                                     mResultFolder.add(folder);
                                 } else {
-                                    f.images.add(media);
+                                    f.mediaItems.add(media);
                                 }
                             }
                         }
@@ -872,16 +905,16 @@ public class MultiMediaSelectorFragment extends Fragment {
                         folder.cover = videos.get(0);
                         List<MediaItem> videoList = new ArrayList<>();
                         videoList.addAll(videos);
-                        folder.images = videoList;
-                        if (mMediaOptions.getIsCarmeActionFirst()) {
+                        folder.mediaItems = videoList;
+                        if (mMediaOptions.isCarmeActionFirst()) {
                             mResultFolder.add(1, folder);
                         } else {
                             mResultFolder.add(0, folder);
                         }
 
                     } else {
-                        f.images.clear();
-                        f.images.addAll(videos);
+                        f.mediaItems.clear();
+                        f.mediaItems.addAll(videos);
                     }
 
                 }

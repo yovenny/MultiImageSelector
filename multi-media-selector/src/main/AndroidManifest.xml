@@ -1,8 +1,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.nereo.multi_media_selector">
 
-    <application android:allowBackup="true">
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <application android:allowBackup="true">
+        <activity
+            android:configChanges="orientation|screenSize"
+            android:name="me.nereo.multi_media_selector.MultiMediaSelectorActivity" />
+        <activity
+            android:configChanges="orientation|screenSize"
+            android:name="me.nereo.multi_media_selector.MediaDetailsActivity" />
     </application>
+
+
+
 
 </manifest>

@@ -36,6 +36,26 @@
             android:layout_height="wrap_content" />
 
         </RadioGroup>
+    <TextView
+        android:text="@string/crop"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <RadioGroup
+        android:id="@+id/crop_rg"
+        android:checkedButton="@+id/image_rb"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/crop_rb"
+            android:text="@string/crop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RadioGroup>
 
     <TextView
         android:text="@string/max_select_amount"

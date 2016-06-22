@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,7 +25,7 @@ import me.nereo.multi_media_selector.bean.MediaItem;
  * Created by Nereo on 2015/4/7.
  * Updated by nereo on 2016/1/19.
  */
-public class MultiMediaSelectorActivity extends AppCompatActivity implements MultiMediaSelectorFragment.Callback {
+public class MultiMediaSelectorActivity extends AppCompatActivity implements MultiMediaSelectorFragment.Callback,CropListener {
     private ArrayList<MediaItem> resultList = new ArrayList<>();
     private TextView mSubmitButton;
     private MediaOptions mMediaOptions;
@@ -81,7 +82,7 @@ public class MultiMediaSelectorActivity extends AppCompatActivity implements Mul
         Bundle bundle = new Bundle();
         bundle.putParcelable(MultiMediaSelectorFragment.EXTRA_MEDIA_OPTIONS, mMediaOptions);
         getSupportFragmentManager().beginTransaction()
-                .add(me.nereo.multi_media_selector.R.id.image_grid, Fragment.instantiate(this, MultiMediaSelectorFragment.class.getName(), bundle))
+                .add(R.id.image_grid, Fragment.instantiate(this, MultiMediaSelectorFragment.class.getName(), bundle))
                 .commit();
 
         // 完成按钮
@@ -113,6 +114,17 @@ public class MultiMediaSelectorActivity extends AppCompatActivity implements Mul
     }
 
 
+    private void showCropFragment(MediaItem mediaItem, MediaOptions options) {
+        Fragment fragment = PhotoCropFragment.newInstance(mediaItem, options);
+        FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction();
+        transaction.replace(R.id.image_grid, fragment);
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -121,6 +133,17 @@ public class MultiMediaSelectorActivity extends AppCompatActivity implements Mul
     }
 
 
+
+    public void updateSubmitBtn(ArrayList<MediaItem> selectList){
+         resultList=selectList;
+        if (resultList == null || resultList.size() <= 0) {
+            mSubmitButton.setText(me.nereo.multi_media_selector.R.string.action_done);
+            mSubmitButton.setEnabled(false);
+        } else {
+            updateDoneText();
+            mSubmitButton.setEnabled(true);
+        }
+    }
 
 
 
@@ -146,19 +169,27 @@ public class MultiMediaSelectorActivity extends AppCompatActivity implements Mul
         switch (item.getItemId()) {
             case android.R.id.home:
                 setResult(RESULT_CANCELED);
-                finish();
+                onBackPressed();
+//                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void onSingleImageSelected(MediaItem path) {
-        Intent data = new Intent();
-        resultList.add(path);
-        data.putParcelableArrayListExtra(MultiMediaSelectorFragment.EXTRA_RESULT, resultList);
-        setResult(RESULT_OK, data);
-        finish();
+    public void onSingleImageSelected(MediaItem mediaItem) {
+        if (mediaItem.isPhoto()) {
+            if (mMediaOptions.isCropped()) {
+                showCropFragment(mediaItem, mMediaOptions);
+            } else {
+                Intent data = new Intent();
+                resultList.add(mediaItem);
+                data.putParcelableArrayListExtra(MultiMediaSelectorFragment.EXTRA_RESULT, resultList);
+                setResult(RESULT_OK, data);
+                finish();
+            }
+        }
+
     }
 
     @Override
@@ -205,6 +236,15 @@ public class MultiMediaSelectorActivity extends AppCompatActivity implements Mul
     public void onRecordShot(MediaItem item) {
         Intent data = new Intent();
         resultList.add(item);
+        data.putParcelableArrayListExtra(MultiMediaSelectorFragment.EXTRA_RESULT, resultList);
+        setResult(RESULT_OK, data);
+        finish();
+    }
+
+    @Override
+    public void onSuccess(MediaItem mediaItem) {
+        Intent data = new Intent();
+        resultList.add(mediaItem);
         data.putParcelableArrayListExtra(MultiMediaSelectorFragment.EXTRA_RESULT, resultList);
         setResult(RESULT_OK, data);
         finish();

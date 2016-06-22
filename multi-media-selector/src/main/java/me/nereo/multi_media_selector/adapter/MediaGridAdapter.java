@@ -98,6 +98,7 @@ public class MediaGridAdapter extends BaseAdapter {
      * @param resultList
      */
     public void setDefaultSelected(ArrayList<MediaItem> resultList) {
+        mSelectedImages.clear();
         for (MediaItem item : resultList) {
             MediaItem image = getImageByPath(item.getPath());
             if (image != null) {

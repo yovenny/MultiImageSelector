@@ -5,6 +5,7 @@
     <string name="select_mode">Select Mode</string>
     <string name="mode_single">Single-Choice</string>
     <string name="mode_multi">Multi-Choice</string>
+    <string name="crop">crop</string>
     <string name="max_select_amount">Max Selected Amount</string>
     <string name="hint_default_amount">default amount is 9</string>
     <string name="enable_camera">Enable Camera Or Record</string>

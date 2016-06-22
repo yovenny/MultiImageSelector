@@ -12,7 +12,7 @@ public class Folder {
     public String name;
     public String path;
     public MediaItem cover;
-    public List<MediaItem> images;
+    public List<MediaItem> mediaItems;
 
     @Override
     public boolean equals(Object o) {
